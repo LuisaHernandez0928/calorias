@@ -30,7 +30,11 @@ function App() {
       key: "1",
       label: "Ingredients",
       children: (
-        <Ingredients notifyAdded={notifyIngredientAdded} data={ingredients} />
+        <Ingredients
+          recipes={recipes}
+          notifyAdded={notifyIngredientAdded}
+          data={ingredients}
+        />
       ),
     },
     {

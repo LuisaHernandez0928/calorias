@@ -6,17 +6,26 @@ import { Button, Modal, Form, Input, Select } from "antd";
 
 import {
   addRecipe,
+  searchRecipes,
   /*
   orderRecipes,
   filterRecipes,
-  searchRecipes,
-  countNumberOfTimesAnIngredientIsUsed,
   getIngredientsInCommon,
   */
 } from "./functions";
 
 export function Recipes({ data, ingredients, notifyAdded }) {
   const [modalAdd, setModalAdd] = useState(false);
+
+  const [dataSearched, setDataSearched] = useState(data);
+
+  const onSearch = (val) => {
+    let searched = data;
+    if (val !== "") {
+      searched = searchRecipes(JSON.parse(JSON.stringify(data)), val);
+    }
+    setDataSearched(searched);
+  };
 
   const addButtonHandler = () => {
     setModalAdd(!modalAdd);
@@ -52,8 +61,15 @@ export function Recipes({ data, ingredients, notifyAdded }) {
       <Button onClick={() => addButtonHandler()} type="primary">
         Add
       </Button>
+      <div style={{ marginTop: "16px", marginBottom: "16px" }}>
+        <Input.Search
+          placeholder="Search recipes"
+          allowClear
+          onSearch={onSearch}
+        />
+      </div>
       <div>
-        {data.map((ing) => (
+        {dataSearched.map((ing) => (
           <div key={ing.id}>{ing.name}</div>
         ))}
       </div>

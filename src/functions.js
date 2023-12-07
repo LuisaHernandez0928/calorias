@@ -36,6 +36,11 @@ export const addIngredient = (
     gramsPerRation: gramsPerRation,
   };
   ingredients.push(newIngredient);
+    fats: fats,
+    sugars: sugars,
+    gramsPerRation: gramsPerRation,
+  };
+  ingredients.push(newIngredient);
 
   return ingredients;
 };
@@ -117,6 +122,31 @@ export const addRecipe = (recipes, name, ingredients, ingredientsAmount) => {
 };
 
 /*
+  Retorna un objeto con dos propiedades: ingredients y amounts, cada uno es un array
+  Por ejemplo:
+  {
+    ingredients: [
+      {
+        ...
+      },
+      {
+        ...
+      }
+    ],
+    amounts: [1, 3]
+  }
+  Esto significa que la receta tiene 2 ingredientes,
+  del primero se usa 1 porción, del segundo se usan 3 porciones
+*/
+export const getIngredientsFromRecipe = (recipes, recipeName, ingredients) => {
+  console.log("getIngredientsFromRecipe");
+  console.log(recipes);
+  console.log(recipeName);
+  console.log(ingredients);
+  return null;
+};
+
+/*
   Recibe una lista de recetas y las ordena según el criterio recibido
   criteria puede tener los valores: 'name', 'numberOfIngredients', 'calories', 'proteins'
   Retorna la lista de ingredientes ordenada por el criterio
@@ -167,7 +197,7 @@ export const countNumberOfTimesAnIngredientIsUsed = (
   console.log(recipes);
   console.log(ingredients);
   console.log(ingredientName);
-  return null;
+  return 0;
 };
 
 /*
@@ -230,5 +260,11 @@ export const calculateNutritionalInfo = (foods, recipes, ingredients) => {
   console.log(foods);
   console.log(recipes);
   console.log(ingredients);
-  return {};
+  return {
+    carbs: 0,
+    calories: 0,
+    sugars: 0,
+    proteins: 0,
+    fats: 0,
+  };
 };
