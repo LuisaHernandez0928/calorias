@@ -75,7 +75,7 @@ export function Ingredients({ data, recipes, notifyAdded }) {
             data,
             ing.name
           );
-          return <div key={ing.id}>{`${ing.name} used ${times} times`}</div>;
+          return <div key={ing.id}>{`${ing.name} | used ${times} times`}</div>;
         })}
       </div>
 
