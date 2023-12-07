@@ -115,7 +115,7 @@ export const getIngredientsFromRecipe = (recipes, recipeName, ingredients) => {
   criteria puede tener los valores: 'name', 'numingredients', 'calories', 'proteins'
   Retorna la lista de ingredientes ordenada por el criterio
 */
-export const orderRecipes = (recipes, criteria) => {
+export const orderRecipes = (recipes, ingredients, criteria) => {
   return recipes;
 };
 
@@ -124,7 +124,13 @@ export const orderRecipes = (recipes, criteria) => {
   criteria puede tener los valores: 'calories', 'proteins'
   Retorna la lista de ingredientes ordenada por el criterio
 */
-export const filterRecipes = (recipes, criteria, value1, value2) => {
+export const filterRecipes = (
+  recipes,
+  ingredients,
+  criteria,
+  value1,
+  value2
+) => {
   return recipes;
 };
 

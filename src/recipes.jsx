@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 
 import React, { useState } from "react";
@@ -25,8 +24,12 @@ const optionsFilter = [
   { label: "Proteins", value: "proteins" },
 ];
 
-const getInitialData = (data, order) => {
-  return orderRecipes(JSON.parse(JSON.stringify(data)), order);
+const getInitialData = (data, ingredients, order) => {
+  return orderRecipes(
+    JSON.parse(JSON.stringify(data)),
+    JSON.parse(JSON.stringify(ingredients)),
+    order
+  );
 };
 
 export function Recipes({ data, ingredients, notifyAdded }) {
@@ -50,12 +53,16 @@ export function Recipes({ data, ingredients, notifyAdded }) {
   /*
     State Data searched
   */
-  const [dataSearched, setDataSearched] = useState(getInitialData(data, order));
+  const [dataSearched, setDataSearched] = useState(
+    getInitialData(data, ingredients, order)
+  );
 
   /*
     State Data filtered
   */
-  const [dataFiltered, setDataFiltered] = useState(getInitialData(data, order));
+  const [dataFiltered, setDataFiltered] = useState(
+    getInitialData(data, ingredients, order)
+  );
 
   /*
     State Modal
@@ -69,6 +76,7 @@ export function Recipes({ data, ingredients, notifyAdded }) {
     setOrder(mOrder);
     const mOrdered = orderRecipes(
       JSON.parse(JSON.stringify(dataSearched)),
+      JSON.parse(JSON.stringify(ingredients)),
       mOrder
     );
     setDataSearched(mOrdered);
@@ -76,6 +84,7 @@ export function Recipes({ data, ingredients, notifyAdded }) {
     if (filterStart != "" && filterEnd != "") {
       dataFiltered = filterRecipes(
         dataFiltered,
+        JSON.parse(JSON.stringify(ingredients)),
         filter,
         filterStart,
         filterEnd
@@ -92,6 +101,7 @@ export function Recipes({ data, ingredients, notifyAdded }) {
     if (filterStart != "" && filterEnd != "") {
       const mFiltered = filterRecipes(
         JSON.parse(JSON.stringify(dataSearched)),
+        JSON.parse(JSON.stringify(ingredients)),
         mFilter,
         parseInt(filterStart),
         parseInt(filterEnd)
@@ -110,6 +120,7 @@ export function Recipes({ data, ingredients, notifyAdded }) {
       if (filterEnd != "") {
         const mFiltered = filterRecipes(
           JSON.parse(JSON.stringify(dataSearched)),
+          JSON.parse(JSON.stringify(ingredients)),
           filter,
           parseInt(value),
           parseInt(filterEnd)
@@ -129,6 +140,7 @@ export function Recipes({ data, ingredients, notifyAdded }) {
       if (filterStart != "") {
         const mFiltered = filterRecipes(
           JSON.parse(JSON.stringify(dataSearched)),
+          JSON.parse(JSON.stringify(ingredients)),
           filter,
           parseInt(filterStart),
           parseInt(value)
@@ -148,10 +160,18 @@ export function Recipes({ data, ingredients, notifyAdded }) {
     }
     if (searched != dataSearched) {
       const dataFound = JSON.parse(JSON.stringify(searched));
-      setDataSearched(orderRecipes(dataFound, order));
+      setDataSearched(
+        orderRecipes(dataFound, JSON.parse(JSON.stringify(ingredients)), order)
+      );
       let dataFiltered = dataFound;
       if (filterStart != "" && filterEnd != "") {
-        dataFiltered = filterRecipes(dataFound, filter, filterStart, filterEnd);
+        dataFiltered = filterRecipes(
+          dataFound,
+          JSON.parse(JSON.stringify(ingredients)),
+          filter,
+          filterStart,
+          filterEnd
+        );
       }
       setDataFiltered(dataFiltered);
     }
@@ -211,8 +231,6 @@ export function Recipes({ data, ingredients, notifyAdded }) {
           marginBottom: "16px",
           display: "flex",
           alignItems: "center",
-          borderBottom: "1px solid #ddd",
-          paddingBottom: "16px",
         }}
       >
         <div style={{ marginRight: "8px", fontWeight: "bold" }}>Order by:</div>
@@ -240,9 +258,22 @@ export function Recipes({ data, ingredients, notifyAdded }) {
         <InputNumber onChange={changeFilterEnd} />
       </div>
 
-      <div>
-        {dataSearched.map((ing) => (
-          <div key={ing.id}>{ing.name}</div>
+      <div style={{ borderTop: "1px solid #ddd" }}>
+        {dataFiltered.map((ing, i) => (
+          <div
+            style={{
+              fontWeight: "bold",
+              borderBottom: "1px solid #ddd",
+              paddingTop: "8px",
+              paddingBottom: "8px",
+              paddingLeft: "16px",
+              paddingRight: "16px",
+              backgroundColor: i % 2 == 0 ? "white" : "#eee",
+            }}
+            key={ing.id}
+          >
+            {ing.name}
+          </div>
         ))}
       </div>
 
