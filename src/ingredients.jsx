@@ -1,15 +1,15 @@
 /* eslint-disable react/prop-types */
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { Button, Modal, Form, InputNumber, Input } from "antd";
+import { Button, Modal, Form, InputNumber, Input, Radio } from "antd";
 
 import {
   addIngredient,
   searchIngredients,
   countNumberOfTimesAnIngredientIsUsed,
-  /*
   orderIngredients,
+  /*
   filterIngredients,
   */
 } from "./functions";
@@ -18,6 +18,36 @@ export function Ingredients({ data, recipes, notifyAdded }) {
   const [modalAdd, setModalAdd] = useState(false);
 
   const [dataSearched, setDataSearched] = useState(data);
+
+  const optionsOrder = [
+    { label: "Name", value: "name" },
+    { label: "Calories", value: "calories" },
+    { label: "Proteins", value: "proteins" },
+  ];
+
+  const [order, setOrder] = useState(optionsOrder[0].value);
+
+  const changeOrder = (value) => {
+    setOrder(value);
+  };
+
+  /*
+  useEffect(() => {
+    const mOrdered = orderIngredients(
+      JSON.parse(JSON.stringify(dataSearched)),
+      order
+    );
+    let same = true;
+    if (mOrdered.lenght == dataSearched.lenght) {
+      mOrdered.map((elem, i) => {
+        if (elem.id != dataSearched[i].id) same = false;
+      });
+    } else same = false;
+    if (!same) {
+      setDataSearched(mOrdered);
+    }
+  }, [order, dataSearched]);
+  */
 
   const onSearch = (val) => {
     let searched = data;
@@ -65,6 +95,18 @@ export function Ingredients({ data, recipes, notifyAdded }) {
           placeholder="Search ingredients"
           allowClear
           onSearch={onSearch}
+        />
+      </div>
+
+      <div
+        style={{ marginBottom: "16px", display: "flex", alignItems: "center" }}
+      >
+        <div style={{ marginRight: "8px" }}>Order by: </div>
+        <Radio.Group
+          options={optionsOrder}
+          onChange={(e) => changeOrder(e.target.value)}
+          defaultValue={optionsOrder[0].value}
+          optionType="button"
         />
       </div>
 

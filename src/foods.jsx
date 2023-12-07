@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from "react";
 
 import { Button, Modal, Form, Select, DatePicker } from "antd";
@@ -170,10 +171,3 @@ export function Foods({ data, ingredients, recipes, notifyAdded }) {
     </div>
   );
 }
-
-Foods.propTypes = {
-  data: Object,
-  ingredients: Object,
-  recipes: Object,
-  notifyAdded: Object,
-};
