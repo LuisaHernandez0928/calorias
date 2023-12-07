@@ -58,15 +58,17 @@ export function Recipes({ data, ingredients, notifyAdded }) {
 
   return (
     <div>
-      <Button onClick={() => addButtonHandler()} type="primary">
-        Add
-      </Button>
-      <div style={{ marginTop: "16px", marginBottom: "16px" }}>
+      <div style={{ display: "flex", marginTop: "16px", marginBottom: "16px" }}>
         <Input.Search
           placeholder="Search recipes"
           allowClear
           onSearch={onSearch}
         />
+        <div style={{ marginLeft: "16px" }}>
+          <Button onClick={() => addButtonHandler()} type="primary">
+            Add
+          </Button>
+        </div>
       </div>
       <div>
         {dataSearched.map((ing) => (

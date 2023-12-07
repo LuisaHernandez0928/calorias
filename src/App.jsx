@@ -62,7 +62,12 @@ function App() {
     },
   ];
 
-  return <Tabs defaultActiveKey="1" items={items} />;
+  return (
+    <div>
+      <div style={{ fontSize: "26px" }}>Nutrition Tracker</div>
+      <Tabs defaultActiveKey="1" items={items} />
+    </div>
+  );
 }
 
 export default App;

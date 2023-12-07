@@ -13,61 +13,60 @@ import {
   filterIngredients,
 } from "./functions";
 
+const optionsOrder = [
+  { label: "Name", value: "name" },
+  { label: "Calories", value: "calories" },
+  { label: "Proteins", value: "proteins" },
+];
+
 export function Ingredients({ data, recipes, notifyAdded }) {
   /*
-    Data displayed
+    State Ordering
   */
-  const [dataSearched, setDataSearched] = useState(data);
-
-  /*
-    Ordering
-  */
-  const optionsOrder = [
-    { label: "Name", value: "name" },
-    { label: "Calories", value: "calories" },
-    { label: "Proteins", value: "proteins" },
-  ];
-
   const [order, setOrder] = useState(optionsOrder[0].value);
 
-  const changeOrder = (value) => {
-    setOrder(value);
-  };
+  /*
+    State Data displayed
+  */
+  const [dataSearched, setDataSearched] = useState(
+    orderIngredients(JSON.parse(JSON.stringify(data)), order)
+  );
 
   /*
-  useEffect(() => {
+    State Modal
+  */
+  const [modalAdd, setModalAdd] = useState(false);
+
+  /*
+    Change order
+  */
+  const changeOrder = (mOrder) => {
+    setOrder(mOrder);
     const mOrdered = orderIngredients(
       JSON.parse(JSON.stringify(dataSearched)),
-      order
+      mOrder
     );
-    let same = true;
-    if (mOrdered.lenght == dataSearched.lenght) {
-      mOrdered.map((elem, i) => {
-        if (elem.id != dataSearched[i].id) same = false;
-      });
-    } else same = false;
-    if (!same) {
-      setDataSearched(mOrdered);
-    }
-  }, [order, dataSearched]);
-  */
+    setDataSearched(mOrdered);
+  };
 
   /* 
-    Searching
+    Trigger Searching
   */
   const onSearch = (val) => {
     let searched = data;
     if (val !== "") {
       searched = searchIngredients(JSON.parse(JSON.stringify(data)), val);
     }
-    if (searched != data) setDataSearched(searched);
+    if (searched != dataSearched) {
+      setDataSearched(
+        orderIngredients(JSON.parse(JSON.stringify(searched)), order)
+      );
+    }
   };
 
   /*
-    Add
+    Trigger Add
   */
-  const [modalAdd, setModalAdd] = useState(false);
-
   const addButtonHandler = () => {
     setModalAdd(!modalAdd);
   };
@@ -100,16 +99,17 @@ export function Ingredients({ data, recipes, notifyAdded }) {
   */
   return (
     <div>
-      <Button onClick={() => addButtonHandler()} type="primary">
-        Add
-      </Button>
-
-      <div style={{ marginTop: "16px", marginBottom: "16px" }}>
+      <div style={{ display: "flex", marginTop: "16px", marginBottom: "16px" }}>
         <Input.Search
           placeholder="Search ingredients"
           allowClear
           onSearch={onSearch}
         />
+        <div style={{ marginLeft: "16px" }}>
+          <Button onClick={() => addButtonHandler()} type="primary">
+            Add
+          </Button>
+        </div>
       </div>
 
       <div
@@ -126,7 +126,6 @@ export function Ingredients({ data, recipes, notifyAdded }) {
 
       <div>
         {dataSearched.map((ing) => {
-          console.log("x");
           const times = countNumberOfTimesAnIngredientIsUsed(
             recipes,
             data,
@@ -175,7 +174,7 @@ export function Ingredients({ data, recipes, notifyAdded }) {
                 <div style={{ marginLeft: "16px" }}>{"|"}</div>
                 <div style={{ marginLeft: "16px" }}>
                   <span style={{ fontWeight: "bold" }}>Calories</span>
-                  {` ${ing.carbs}g`}
+                  {` ${ing.calories}`}
                 </div>
                 <div style={{ marginLeft: "16px" }}>{"|"}</div>
                 <div

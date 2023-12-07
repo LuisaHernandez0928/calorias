@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /*
   Añade un ingrediente a la lista de ingredientes que se le pasa. Debe retornar la lista
   de ingredientes con el nuevo ingrediente añadido.
@@ -15,16 +16,6 @@ export const addIngredient = (
   sugars,
   gramsPerRation
 ) => {
-  console.log("addIngredient");
-  console.log(ingredients);
-  console.log(name);
-  console.log(calories);
-  console.log(proteins);
-  console.log(carbs);
-  console.log(fats);
-  console.log(sugars);
-  console.log(gramsPerRation);
-
   const newIngredient = {
     id: Date.now(),
     name: name,
@@ -46,18 +37,14 @@ export const addIngredient = (
   que haga match retorna una lista vacía.
 */
 export const searchIngredients = (ingredients, name) => {
-  console.log("searchIngredients");
-  console.log(ingredients);
-  console.log(name);
-  const matchesList=[];
-ingredients.map(x=>{
-  if(x.name === name){
-    matchesList.push(x);
-  }
-});
+  const matchesList = [];
+  ingredients.map((x) => {
+    if (x.name === name) {
+      matchesList.push(x);
+    }
+  });
   return matchesList;
 };
-
 
 /*
   Recibe una lista de ingredientes y los ordena según el criterio recibido
@@ -65,10 +52,9 @@ ingredients.map(x=>{
   Retorna la lista de ingredientes ordenada por el criterio
 */
 export const orderIngredients = (ingredients, criteria) => {
-  console.log("orderIngredients");
-  console.log(ingredients);
-  console.log(criteria);
-  return ingredients;
+  if (criteria == "name")
+    return ingredients.sort((a, b) => (a.name > b.name ? 1 : -1));
+  return ingredients.sort((a, b) => a.calories - b.calories);
 };
 
 /*
@@ -83,11 +69,6 @@ export const orderIngredients = (ingredients, criteria) => {
   Debería retornar la lista de ingredientes con entre 30 y 50 calorias
 */
 export const filterIngredients = (ingredients, criteria, value1, value2) => {
-  console.log("filterIngredients");
-  console.log(ingredients);
-  console.log(criteria);
-  console.log(value1);
-  console.log(value2);
   return [];
 };
 
@@ -107,11 +88,6 @@ export const filterIngredients = (ingredients, criteria, value1, value2) => {
     y 1 porción del ingrediente con id 30.
  */
 export const addRecipe = (recipes, name, ingredients, ingredientsAmount) => {
-  console.log("addRecipe");
-  console.log(recipes);
-  console.log(ingredients);
-  console.log(ingredientsAmount);
-  console.log(name);
   return recipes;
 };
 
@@ -133,10 +109,6 @@ export const addRecipe = (recipes, name, ingredients, ingredientsAmount) => {
   del primero se usa 1 porción, del segundo se usan 3 porciones
 */
 export const getIngredientsFromRecipe = (recipes, recipeName, ingredients) => {
-  console.log("getIngredientsFromRecipe");
-  console.log(recipes);
-  console.log(recipeName);
-  console.log(ingredients);
   return null;
 };
 
@@ -146,9 +118,6 @@ export const getIngredientsFromRecipe = (recipes, recipeName, ingredients) => {
   Retorna la lista de ingredientes ordenada por el criterio
 */
 export const orderRecipes = (recipes, criteria) => {
-  console.log("orderRecipes");
-  console.log(recipes);
-  console.log(criteria);
   return recipes;
 };
 
@@ -158,11 +127,6 @@ export const orderRecipes = (recipes, criteria) => {
   Retorna la lista de ingredientes ordenada por el criterio
 */
 export const filterRecipes = (recipes, criteria, value1, value2) => {
-  console.log("filterRecipes");
-  console.log(recipes);
-  console.log(criteria);
-  console.log(value1);
-  console.log(value2);
   return recipes;
 };
 
@@ -172,9 +136,6 @@ export const filterRecipes = (recipes, criteria, value1, value2) => {
   que haga match retorna una lista vacía.
 */
 export const searchRecipes = (recipes, name) => {
-  console.log("searchRecipes");
-  console.log(recipes);
-  console.log(name);
   return recipes;
 };
 
@@ -187,10 +148,6 @@ export const countNumberOfTimesAnIngredientIsUsed = (
   ingredients,
   ingredientName
 ) => {
-  console.log("countNumberOfTimesAnIngredientIsUsed");
-  console.log(recipes);
-  console.log(ingredients);
-  console.log(ingredientName);
   return 0;
 };
 
@@ -198,9 +155,6 @@ export const countNumberOfTimesAnIngredientIsUsed = (
   Recibe 2 recetas y retorna la lista de ingredientes que tienen en común
 */
 export const getIngredientsInCommon = (recipe1, recipe2) => {
-  console.log("getIngredientsInCommon");
-  console.log(recipe1);
-  console.log(recipe2);
   return [];
 };
 
@@ -209,10 +163,6 @@ export const getIngredientsInCommon = (recipe1, recipe2) => {
   Una comida cuenta con un id, una fecha, y una receta.
 */
 export const addFood = (foods, day, recipe) => {
-  console.log("addFood");
-  console.log(foods);
-  console.log(day);
-  console.log(recipe);
   return foods;
 };
 
@@ -220,9 +170,6 @@ export const addFood = (foods, day, recipe) => {
   Obtiene todas las comidas registradas en un día específico.
 */
 export const getFoodsByDay = (foods, day) => {
-  console.log("getFood");
-  console.log(foods);
-  console.log(day);
   return [];
 };
 
@@ -230,10 +177,6 @@ export const getFoodsByDay = (foods, day) => {
   Obtiene todas las comidas registradas en un rango de días.
 */
 export const getFoodsInRange = (foods, day1, day2) => {
-  console.log("getFoodsInRange");
-  console.log(foods);
-  console.log(day1);
-  console.log(day2);
   return [];
 };
 
@@ -250,10 +193,6 @@ export const getFoodsInRange = (foods, day1, day2) => {
   }
 */
 export const calculateNutritionalInfo = (foods, recipes, ingredients) => {
-  console.log("calculateNutritionalInfo");
-  console.log(foods);
-  console.log(recipes);
-  console.log(ingredients);
   return {
     carbs: 0,
     calories: 0,

@@ -117,14 +117,27 @@ export function Foods({ data, ingredients, recipes, notifyAdded }) {
 
   return (
     <div>
-      <Button onClick={() => addButtonHandler()} type="primary">
-        Add
-      </Button>
-      <div style={{ display: "flex", alignItems: "center", marginTop: "16px" }}>
-        <div style={{ marginRight: "8px" }}>Start date:</div>
-        <DatePicker onChange={onSearchStart} />
-        <div style={{ marginLeft: "16px", marginRight: "8px" }}>End date:</div>
-        <DatePicker onChange={onSearchEnd} />
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          marginTop: "16px",
+          justifyContent: "space-between",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <div style={{ marginRight: "8px" }}>Start date:</div>
+          <DatePicker onChange={onSearchStart} />
+          <div style={{ marginLeft: "16px", marginRight: "8px" }}>
+            End date:
+          </div>
+          <DatePicker onChange={onSearchEnd} />
+        </div>
+        <div>
+          <Button onClick={() => addButtonHandler()} type="primary">
+            Add
+          </Button>
+        </div>
       </div>
       <div style={{ display: "flex", marginTop: "16px" }}>
         <div>{`Calories: ${nutritionalInfo.calories}`}</div>
