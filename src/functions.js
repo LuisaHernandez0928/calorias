@@ -112,7 +112,7 @@ export const getIngredientsFromRecipe = (recipes, recipeName, ingredients) => {
 
 /*
   Recibe una lista de recetas y las ordena según el criterio recibido
-  criteria puede tener los valores: 'name', 'numberOfIngredients', 'calories', 'proteins'
+  criteria puede tener los valores: 'name', 'numingredients', 'calories', 'proteins'
   Retorna la lista de ingredientes ordenada por el criterio
 */
 export const orderRecipes = (recipes, criteria) => {
@@ -121,7 +121,7 @@ export const orderRecipes = (recipes, criteria) => {
 
 /*
   Recibe una lista de recetas y las filtra según el criterio recibido
-  criteria puede tener los valores: 'name', 'numberOfIngredients', 'calories', 'proteins'
+  criteria puede tener los valores: 'calories', 'proteins'
   Retorna la lista de ingredientes ordenada por el criterio
 */
 export const filterRecipes = (recipes, criteria, value1, value2) => {
@@ -147,13 +147,6 @@ export const countNumberOfTimesAnIngredientIsUsed = (
   ingredientName
 ) => {
   return 0;
-};
-
-/*
-  Recibe 2 recetas y retorna la lista de ingredientes que tienen en común
-*/
-export const getIngredientsInCommon = (recipe1, recipe2) => {
-  return [];
 };
 
 /*

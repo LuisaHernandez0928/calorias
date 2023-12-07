@@ -1,33 +1,165 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 
 import React, { useState } from "react";
 
-import { Button, Modal, Form, Input, Select } from "antd";
+import { Button, Modal, Form, Input, Select, Radio, InputNumber } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 
 import {
   addRecipe,
   searchRecipes,
-  /*
   orderRecipes,
   filterRecipes,
-  getIngredientsInCommon,
-  */
 } from "./functions";
 
+const optionsOrder = [
+  { label: "Name", value: "name" },
+  { label: "Calories", value: "calories" },
+  { label: "Proteins", value: "proteins" },
+  { label: "Amount of Ingredients", value: "numingredients" },
+];
+
+const optionsFilter = [
+  { label: "Calories", value: "calories" },
+  { label: "Proteins", value: "proteins" },
+];
+
+const getInitialData = (data, order) => {
+  return orderRecipes(JSON.parse(JSON.stringify(data)), order);
+};
+
 export function Recipes({ data, ingredients, notifyAdded }) {
+  const optionsIng = ingredients.map((ing) => ({
+    label: ing.name,
+    value: ing.id,
+  }));
+
+  /*
+    State Ordering
+  */
+  const [order, setOrder] = useState(optionsOrder[0].value);
+
+  /*
+    State Filtering
+  */
+  const [filter, setFilter] = useState(optionsFilter[0].value);
+  const [filterStart, setFilterStart] = useState("");
+  const [filterEnd, setFilterEnd] = useState("");
+
+  /*
+    State Data searched
+  */
+  const [dataSearched, setDataSearched] = useState(getInitialData(data, order));
+
+  /*
+    State Data filtered
+  */
+  const [dataFiltered, setDataFiltered] = useState(getInitialData(data, order));
+
+  /*
+    State Modal
+  */
   const [modalAdd, setModalAdd] = useState(false);
 
-  const [dataSearched, setDataSearched] = useState(data);
+  /*
+    Change order
+  */
+  const changeOrder = (mOrder) => {
+    setOrder(mOrder);
+    const mOrdered = orderRecipes(
+      JSON.parse(JSON.stringify(dataSearched)),
+      mOrder
+    );
+    setDataSearched(mOrdered);
+    let dataFiltered = mOrdered;
+    if (filterStart != "" && filterEnd != "") {
+      dataFiltered = filterRecipes(
+        dataFiltered,
+        filter,
+        filterStart,
+        filterEnd
+      );
+    }
+    setDataFiltered(dataFiltered);
+  };
 
+  /*
+    Change filter
+  */
+  const changeFilter = (mFilter) => {
+    setFilter(mFilter);
+    if (filterStart != "" && filterEnd != "") {
+      const mFiltered = filterRecipes(
+        JSON.parse(JSON.stringify(dataSearched)),
+        mFilter,
+        parseInt(filterStart),
+        parseInt(filterEnd)
+      );
+      setDataSearched(mFiltered);
+    }
+  };
+
+  const changeFilterStart = (value) => {
+    if (!value) {
+      setFilterStart("");
+      setDataSearched(getInitialData(data, order));
+      setDataFiltered(getInitialData(data, order));
+    } else {
+      setFilterStart(`${value}`);
+      if (filterEnd != "") {
+        const mFiltered = filterRecipes(
+          JSON.parse(JSON.stringify(dataSearched)),
+          filter,
+          parseInt(value),
+          parseInt(filterEnd)
+        );
+        setDataFiltered(mFiltered);
+      }
+    }
+  };
+
+  const changeFilterEnd = (value) => {
+    if (!value) {
+      setFilterEnd("");
+      setDataSearched(getInitialData(data, order));
+      setDataFiltered(getInitialData(data, order));
+    } else {
+      setFilterEnd(`${value}`);
+      if (filterStart != "") {
+        const mFiltered = filterRecipes(
+          JSON.parse(JSON.stringify(dataSearched)),
+          filter,
+          parseInt(filterStart),
+          parseInt(value)
+        );
+        setDataFiltered(mFiltered);
+      }
+    }
+  };
+
+  /* 
+    Trigger Searching
+  */
   const onSearch = (val) => {
     let searched = data;
     if (val !== "") {
       searched = searchRecipes(JSON.parse(JSON.stringify(data)), val);
     }
-    setDataSearched(searched);
+    if (searched != dataSearched) {
+      const dataFound = JSON.parse(JSON.stringify(searched));
+      setDataSearched(orderRecipes(dataFound, order));
+      let dataFiltered = dataFound;
+      if (filterStart != "" && filterEnd != "") {
+        dataFiltered = filterRecipes(dataFound, filter, filterStart, filterEnd);
+      }
+      setDataFiltered(dataFiltered);
+    }
   };
 
+  /*
+    Trigger Add
+  */
   const addButtonHandler = () => {
     setModalAdd(!modalAdd);
   };
@@ -39,11 +171,6 @@ export function Recipes({ data, ingredients, notifyAdded }) {
   const handleOk = () => {
     addButtonHandler();
   };
-
-  const optionsIng = ingredients.map((ing) => ({
-    label: ing.name,
-    value: ing.id,
-  }));
 
   const onSubmit = (values) => {
     const amounts = values.amounts.split(",").map((elem) => parseInt(elem));
@@ -57,6 +184,9 @@ export function Recipes({ data, ingredients, notifyAdded }) {
     handleOk();
   };
 
+  /*
+    Render
+  */
   return (
     <div>
       <div style={{ display: "flex", marginTop: "16px", marginBottom: "16px" }}>
@@ -75,6 +205,41 @@ export function Recipes({ data, ingredients, notifyAdded }) {
           </Button>
         </div>
       </div>
+
+      <div
+        style={{
+          marginBottom: "16px",
+          display: "flex",
+          alignItems: "center",
+          borderBottom: "1px solid #ddd",
+          paddingBottom: "16px",
+        }}
+      >
+        <div style={{ marginRight: "8px", fontWeight: "bold" }}>Order by:</div>
+        <Radio.Group
+          options={optionsOrder}
+          onChange={(e) => changeOrder(e.target.value)}
+          defaultValue={optionsOrder[0].value}
+          optionType="button"
+        />
+
+        <div
+          style={{ marginRight: "8px", marginLeft: "16px", fontWeight: "bold" }}
+        >
+          Filter by:
+        </div>
+        <Radio.Group
+          options={optionsFilter}
+          onChange={(e) => changeFilter(e.target.value)}
+          defaultValue={optionsFilter[0].value}
+          optionType="button"
+        />
+        <div style={{ marginLeft: "8px", marginRight: "8px" }}>Start:</div>
+        <InputNumber onChange={changeFilterStart} />
+        <div style={{ marginLeft: "8px", marginRight: "8px" }}>End:</div>
+        <InputNumber onChange={changeFilterEnd} />
+      </div>
+
       <div>
         {dataSearched.map((ing) => (
           <div key={ing.id}>{ing.name}</div>

@@ -127,9 +127,17 @@ export function Foods({ data, ingredients, recipes, notifyAdded }) {
         }}
       >
         <div style={{ display: "flex", alignItems: "center" }}>
-          <div style={{ marginRight: "8px" }}>Start date:</div>
+          <div style={{ marginRight: "8px", fontWeight: "bold" }}>
+            Start date:
+          </div>
           <DatePicker onChange={onSearchStart} />
-          <div style={{ marginLeft: "16px", marginRight: "8px" }}>
+          <div
+            style={{
+              marginLeft: "16px",
+              marginRight: "8px",
+              fontWeight: "bold",
+            }}
+          >
             End date:
           </div>
           <DatePicker onChange={onSearchEnd} />
