@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 
 import { Button, Modal, Form, Select, DatePicker } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 
 import {
   addFood,
@@ -134,29 +135,93 @@ export function Foods({ data, ingredients, recipes, notifyAdded }) {
           <DatePicker onChange={onSearchEnd} />
         </div>
         <div>
-          <Button onClick={() => addButtonHandler()} type="primary">
-            Add
+          <Button
+            type="primary"
+            onClick={() => addButtonHandler()}
+            icon={<PlusOutlined />}
+          >
+            Register Meal
           </Button>
         </div>
       </div>
-      <div style={{ display: "flex", marginTop: "16px" }}>
-        <div>{`Calories: ${nutritionalInfo.calories}`}</div>
+
+      <div
+        style={{
+          display: "flex",
+          marginTop: "16px",
+          alignItems: "center",
+          borderTop: "1px solid #ddd",
+          paddingBottom: "16px",
+          paddingTop: "16px",
+        }}
+      >
         <div
-          style={{ marginLeft: "16px" }}
-        >{`Carbs: ${nutritionalInfo.carbs}`}</div>
-        <div
-          style={{ marginLeft: "16px" }}
-        >{`Sugars: ${nutritionalInfo.sugars}`}</div>
-        <div
-          style={{ marginLeft: "16px" }}
-        >{`Fats: ${nutritionalInfo.fats}`}</div>
-        <div
-          style={{ marginLeft: "16px" }}
-        >{`proteins: ${nutritionalInfo.proteins}`}</div>
+          style={{ fontSize: "18px", fontWeight: "bold" }}
+        >{`Total Nutrition: `}</div>
+        <div style={{ marginLeft: "16px" }}>
+          <span style={{ fontWeight: "bold" }}>{`Calories: `}</span>
+          {`${nutritionalInfo.calories}`}
+        </div>
+        <div style={{ marginLeft: "16px" }}>
+          <span style={{ fontWeight: "bold" }}>{`Carbs: `}</span>
+          {`${nutritionalInfo.carbs}`}
+        </div>
+        <div style={{ marginLeft: "16px" }}>
+          <span style={{ fontWeight: "bold" }}>{`Sugars: `}</span>
+          {`${nutritionalInfo.sugars}`}
+        </div>
+        <div style={{ marginLeft: "16px" }}>
+          <span style={{ fontWeight: "bold" }}>{`Fats: `}</span>
+          {`${nutritionalInfo.fats}`}
+        </div>
+        <div style={{ marginLeft: "16px" }}>
+          <span style={{ fontWeight: "bold" }}>{`Proteins: `}</span>
+          {`${nutritionalInfo.proteins}`}
+        </div>
       </div>
-      <div style={{ marginTop: "16px" }}>
-        {dataSearched.map((ing) => (
-          <div key={ing.id}>{`${ing.day}: ${ing.recipe}`}</div>
+
+      <div style={{ borderTop: "1px solid #ddd" }}>
+        {dataSearched.map((ing, i) => (
+          <div
+            key={ing.id}
+            style={{
+              display: "flex",
+              borderBottom: "1px solid #ddd",
+              paddingTop: "8px",
+              paddingBottom: "8px",
+              justifyContent: "space-between",
+              backgroundColor: i % 2 == 0 ? "white" : "#eee",
+              paddingLeft: "16px",
+              paddingRight: "16px",
+            }}
+          >
+            <div style={{ display: "flex" }}>
+              <span style={{ fontWeight: "bold" }}>{`${ing.day}: `}</span>
+              <div style={{ marginLeft: "8px" }}>{`${ing.recipe}`}</div>
+            </div>
+            <div style={{ display: "flex" }}>
+              <div style={{ marginLeft: "16px" }}>
+                <span style={{ fontWeight: "bold" }}>{`Calories: `}</span>
+                {`${nutritionalInfo.calories}`}
+              </div>
+              <div style={{ marginLeft: "16px" }}>
+                <span style={{ fontWeight: "bold" }}>{`Carbs: `}</span>
+                {`${nutritionalInfo.carbs}`}
+              </div>
+              <div style={{ marginLeft: "16px" }}>
+                <span style={{ fontWeight: "bold" }}>{`Sugars: `}</span>
+                {`${nutritionalInfo.sugars}`}
+              </div>
+              <div style={{ marginLeft: "16px" }}>
+                <span style={{ fontWeight: "bold" }}>{`Fats: `}</span>
+                {`${nutritionalInfo.fats}`}
+              </div>
+              <div style={{ marginLeft: "16px" }}>
+                <span style={{ fontWeight: "bold" }}>{`Proteins: `}</span>
+                {`${nutritionalInfo.proteins}`}
+              </div>
+            </div>
+          </div>
         ))}
       </div>
 

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 
 import { Button, Modal, Form, Input, Select } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 
 import {
   addRecipe,
@@ -65,8 +66,12 @@ export function Recipes({ data, ingredients, notifyAdded }) {
           onSearch={onSearch}
         />
         <div style={{ marginLeft: "16px" }}>
-          <Button onClick={() => addButtonHandler()} type="primary">
-            Add
+          <Button
+            icon={<PlusOutlined />}
+            onClick={() => addButtonHandler()}
+            type="primary"
+          >
+            Add Recipe
           </Button>
         </div>
       </div>

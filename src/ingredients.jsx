@@ -1,9 +1,10 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { Button, Modal, Form, InputNumber, Input, Radio } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
 
 import {
   addIngredient,
@@ -19,6 +20,15 @@ const optionsOrder = [
   { label: "Proteins", value: "proteins" },
 ];
 
+const optionsFilter = [
+  { label: "Calories", value: "calories" },
+  { label: "Proteins", value: "proteins" },
+];
+
+const getInitialData = (data, order) => {
+  return orderIngredients(JSON.parse(JSON.stringify(data)), order);
+};
+
 export function Ingredients({ data, recipes, notifyAdded }) {
   /*
     State Ordering
@@ -26,11 +36,21 @@ export function Ingredients({ data, recipes, notifyAdded }) {
   const [order, setOrder] = useState(optionsOrder[0].value);
 
   /*
-    State Data displayed
+    State Filtering
   */
-  const [dataSearched, setDataSearched] = useState(
-    orderIngredients(JSON.parse(JSON.stringify(data)), order)
-  );
+  const [filter, setFilter] = useState(optionsFilter[0].value);
+  const [filterStart, setFilterStart] = useState("");
+  const [filterEnd, setFilterEnd] = useState("");
+
+  /*
+    State Data searched
+  */
+  const [dataSearched, setDataSearched] = useState(getInitialData(data, order));
+
+  /*
+    State Data filtered
+  */
+  const [dataFiltered, setDataFiltered] = useState(getInitialData(data, order));
 
   /*
     State Modal
@@ -47,6 +67,70 @@ export function Ingredients({ data, recipes, notifyAdded }) {
       mOrder
     );
     setDataSearched(mOrdered);
+    let dataFiltered = mOrdered;
+    if (filterStart != "" && filterEnd != "") {
+      dataFiltered = filterIngredients(
+        dataFiltered,
+        filter,
+        filterStart,
+        filterEnd
+      );
+    }
+    setDataFiltered(dataFiltered);
+  };
+
+  /*
+    Change filter
+  */
+  const changeFilter = (mFilter) => {
+    setFilter(mFilter);
+    if (filterStart != "" && filterEnd != "") {
+      const mFiltered = filterIngredients(
+        JSON.parse(JSON.stringify(dataSearched)),
+        mFilter,
+        parseInt(filterStart),
+        parseInt(filterEnd)
+      );
+      setDataSearched(mFiltered);
+    }
+  };
+
+  const changeFilterStart = (value) => {
+    if (!value) {
+      setFilterStart("");
+      setDataSearched(getInitialData(data, order));
+      setDataFiltered(getInitialData(data, order));
+    } else {
+      setFilterStart(`${value}`);
+      if (filterEnd != "") {
+        const mFiltered = filterIngredients(
+          JSON.parse(JSON.stringify(dataSearched)),
+          filter,
+          parseInt(value),
+          parseInt(filterEnd)
+        );
+        setDataFiltered(mFiltered);
+      }
+    }
+  };
+
+  const changeFilterEnd = (value) => {
+    if (!value) {
+      setFilterEnd("");
+      setDataSearched(getInitialData(data, order));
+      setDataFiltered(getInitialData(data, order));
+    } else {
+      setFilterEnd(`${value}`);
+      if (filterStart != "") {
+        const mFiltered = filterIngredients(
+          JSON.parse(JSON.stringify(dataSearched)),
+          filter,
+          parseInt(filterStart),
+          parseInt(value)
+        );
+        setDataFiltered(mFiltered);
+      }
+    }
   };
 
   /* 
@@ -58,9 +142,18 @@ export function Ingredients({ data, recipes, notifyAdded }) {
       searched = searchIngredients(JSON.parse(JSON.stringify(data)), val);
     }
     if (searched != dataSearched) {
-      setDataSearched(
-        orderIngredients(JSON.parse(JSON.stringify(searched)), order)
-      );
+      const dataFound = JSON.parse(JSON.stringify(searched));
+      setDataSearched(orderIngredients(dataFound, order));
+      let dataFiltered = dataFound;
+      if (filterStart != "" && filterEnd != "") {
+        dataFiltered = filterIngredients(
+          dataFound,
+          filter,
+          filterStart,
+          filterEnd
+        );
+      }
+      setDataFiltered(dataFiltered);
     }
   };
 
@@ -106,26 +199,52 @@ export function Ingredients({ data, recipes, notifyAdded }) {
           onSearch={onSearch}
         />
         <div style={{ marginLeft: "16px" }}>
-          <Button onClick={() => addButtonHandler()} type="primary">
-            Add
+          <Button
+            icon={<PlusOutlined />}
+            onClick={() => addButtonHandler()}
+            type="primary"
+          >
+            Add Ingredient
           </Button>
         </div>
       </div>
 
       <div
-        style={{ marginBottom: "16px", display: "flex", alignItems: "center" }}
+        style={{
+          marginBottom: "16px",
+          display: "flex",
+          alignItems: "center",
+          borderBottom: "1px solid #ddd",
+          paddingBottom: "16px",
+        }}
       >
-        <div style={{ marginRight: "8px" }}>Order by: </div>
+        <div style={{ marginRight: "8px", fontWeight: "bold" }}>Order by:</div>
         <Radio.Group
           options={optionsOrder}
           onChange={(e) => changeOrder(e.target.value)}
           defaultValue={optionsOrder[0].value}
           optionType="button"
         />
+
+        <div
+          style={{ marginRight: "8px", marginLeft: "16px", fontWeight: "bold" }}
+        >
+          Filter by:
+        </div>
+        <Radio.Group
+          options={optionsFilter}
+          onChange={(e) => changeFilter(e.target.value)}
+          defaultValue={optionsFilter[0].value}
+          optionType="button"
+        />
+        <div style={{ marginLeft: "8px", marginRight: "8px" }}>Start:</div>
+        <InputNumber onChange={changeFilterStart} />
+        <div style={{ marginLeft: "8px", marginRight: "8px" }}>End:</div>
+        <InputNumber onChange={changeFilterEnd} />
       </div>
 
       <div>
-        {dataSearched.map((ing) => {
+        {dataFiltered.map((ing, i) => {
           const times = countNumberOfTimesAnIngredientIsUsed(
             recipes,
             data,
@@ -140,6 +259,9 @@ export function Ingredients({ data, recipes, notifyAdded }) {
                 borderBottom: "1px solid #ddd",
                 paddingBottom: "16px",
                 paddingTop: "8px",
+                paddingLeft: "16px",
+                paddingRight: "16px",
+                backgroundColor: i % 2 == 0 ? "white" : "#eee",
               }}
             >
               <div>

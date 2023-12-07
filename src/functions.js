@@ -52,14 +52,12 @@ export const searchIngredients = (ingredients, name) => {
   Retorna la lista de ingredientes ordenada por el criterio
 */
 export const orderIngredients = (ingredients, criteria) => {
-  if (criteria == "name")
-    return ingredients.sort((a, b) => (a.name > b.name ? 1 : -1));
-  return ingredients.sort((a, b) => a.calories - b.calories);
+  return ingredients;
 };
 
 /*
   Recibe una lista de ingredientes y los filtra según el criterio recibido
-  criteria es un string que puede tener los valores: 'name', 'calories', 'proteins'
+  criteria es un string que puede tener los valores: 'calories', 'proteins'
   value es el filtro.
   Retorna la lista de ingredientes filtrada por el criterio
   Por ejemplo:
