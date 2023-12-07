@@ -35,13 +35,8 @@ export const addIngredient = (
     sugars: sugars,
     gramsPerRation: gramsPerRation,
   };
+  
   ingredients.push(newIngredient);
-    fats: fats,
-    sugars: sugars,
-    gramsPerRation: gramsPerRation,
-  };
-  ingredients.push(newIngredient);
-
   return ingredients;
 };
 
