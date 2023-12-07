@@ -26,19 +26,19 @@ export const addIngredient = (
   console.log(gramsPerRation);
 
   const newIngredient = {
-    name:name, 
-    calories:calories, 
-    proteins:proteins, 
+    id: Date.now(),
+    name: name,
+    calories: calories,
+    proteins: proteins,
     carb: carbs,
-    fats:fats,
-    sugars:sugars,
-    gramsPerRation:gramsPerRation
-    };
-    ingredients.push(newIngredient);
+    fats: fats,
+    sugars: sugars,
+    gramsPerRation: gramsPerRation,
+  };
+  ingredients.push(newIngredient);
 
   return ingredients;
 };
-
 
 /*
   Recibe la lista de ingredientes y busca en ella los ingredientes cuyo nombre hagan match
@@ -49,8 +49,16 @@ export const searchIngredients = (ingredients, name) => {
   console.log("searchIngredients");
   console.log(ingredients);
   console.log(name);
-  return [];
+  const matchesList=[];
+ingredients.map(x=>{
+  if(x.name === name){
+    matchesList.push(x.name);
+  }
+});
+
+  return [matchesList];
 };
+
 
 /*
   Recibe una lista de ingredientes y los ordena según el criterio recibido
