@@ -56,7 +56,7 @@ ingredients.map(x=>{
   console.log('Luisa3'+ name);
   if(x.name === name){
     console.log('Luisa4'+ x.name);
-    matchesList.push(x.name);
+    matchesList.push(x);
     console.log('esto es de Luisa:' + matchesList);
   }
 });
