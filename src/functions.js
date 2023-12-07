@@ -51,17 +51,11 @@ export const searchIngredients = (ingredients, name) => {
   console.log(name);
   const matchesList=[];
 ingredients.map(x=>{
-  console.log('Luisa1'+ x);
-  console.log('Luisa2'+ x.name);
-  console.log('Luisa3'+ name);
   if(x.name === name){
-    console.log('Luisa4'+ x.name);
     matchesList.push(x);
-    console.log('esto es de Luisa:' + matchesList);
   }
 });
-
-  return [matchesList];
+  return matchesList;
 };
 
 
