@@ -35,7 +35,7 @@ export const addIngredient = (
     sugars: sugars,
     gramsPerRation: gramsPerRation,
   };
-  
+
   ingredients.push(newIngredient);
   return ingredients;
 };
@@ -53,6 +53,7 @@ export const searchIngredients = (ingredients, name) => {
 ingredients.map(x=>{
   if(x.name === name){
     matchesList.push(x.name);
+    console.log(matchesList);
   }
 });
 
