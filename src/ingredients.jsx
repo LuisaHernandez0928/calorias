@@ -314,7 +314,17 @@ export function Ingredients({ data, recipes, notifyAdded }) {
         onCancel={handleCancel}
         footer=""
       >
-        <Form onFinish={onSubmit}>
+        <Form
+          onFinish={onSubmit}
+          initialValues={{
+            calories: 0,
+            fats: 0,
+            proteins: 0,
+            sugars: 0,
+            gramsPerRation: 0,
+            carbs: 0,
+          }}
+        >
           <Form.Item label="Name" name="name" rules={[{ required: true }]}>
             <Input placeholder="Input name..." />
           </Form.Item>
