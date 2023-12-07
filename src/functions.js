@@ -80,12 +80,13 @@ export const filterIngredients = (ingredients, criteria, value1, value2) => {
   representa la cantidad de veces que se usa cada ingrediente
   Ejemplo:
     Puede recibir una receta con 2 ingredientes
-    [{name: 'huevo' ...}, {name: 'arroz' ...}]
+    [20, 30]
     Y con la siguiente cantidad de ingredientes
     [2, 1]
-    Esto significaría que la receta usa 2 porciones de huevo, y 1 porción de arroz.
+    Esto significaría que la receta usa 2 porciones del ingrediente con id 20,
+    y 1 porción del ingrediente con id 30.
  */
-export const addRecipe = (recipes, ingredients, ingredientsAmount, name) => {
+export const addRecipe = (recipes, name, ingredients, ingredientsAmount) => {
   console.log("addRecipe");
   console.log(recipes);
   console.log(ingredients);

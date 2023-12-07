@@ -2,27 +2,21 @@
 
 import React, { useState } from "react";
 
-import { Button, Modal, Form, InputNumber, Input } from "antd";
+import { Button, Modal, Form, Input, Select } from "antd";
 
 import {
   addRecipe,
   /*
-  searchIngredients,
-  orderIngredients,
-  filterIngredients,
   orderRecipes,
   filterRecipes,
   searchRecipes,
   countNumberOfTimesAnIngredientIsUsed,
   getIngredientsInCommon,
-  getFoodsByDay,
-  getFoodsInRange,
-  calculateNutritionalInfo
   */
 } from "./functions";
 
-export function Recipes({ data, notifyAdded }) {
-  const [modalAdd, setModalAdd] = useState(true);
+export function Recipes({ data, ingredients, notifyAdded }) {
+  const [modalAdd, setModalAdd] = useState(false);
 
   const addButtonHandler = () => {
     setModalAdd(!modalAdd);
@@ -36,17 +30,18 @@ export function Recipes({ data, notifyAdded }) {
     addButtonHandler();
   };
 
+  const optionsIng = ingredients.map((ing) => ({
+    label: ing.name,
+    value: ing.id,
+  }));
+
   const onSubmit = (values) => {
+    const amounts = values.amounts.split(",").map((elem) => parseInt(elem));
     const newData = addRecipe(
       JSON.parse(JSON.stringify(data)),
-      values.id,
       values.name,
-      values.calories,
-      values.proteins,
-      values.carbs,
-      values.fats,
-      values.sugars,
-      values.gramsPerRation
+      values.ingredients,
+      amounts
     );
     notifyAdded(newData);
     handleOk();
@@ -71,42 +66,25 @@ export function Recipes({ data, notifyAdded }) {
         footer=""
       >
         <Form onFinish={onSubmit}>
-          <Form.Item label="ID" name="id" rules={[{ required: true }]}>
-            <InputNumber />
-          </Form.Item>
           <Form.Item label="Name" name="name" rules={[{ required: true }]}>
             <Input placeholder="Input name..." />
           </Form.Item>
           <Form.Item
-            label="Calories"
-            name="calories"
+            label="Ingredients"
+            name="ingredients"
             rules={[{ required: true }]}
           >
-            <InputNumber />
+            <Select mode="multiple" options={optionsIng} />
           </Form.Item>
+          <div>Ingredients amount (with commas, same order as ingredients)</div>
           <Form.Item
-            label="Proteins"
-            name="proteins"
+            label="Amounts"
+            name="amounts"
             rules={[{ required: true }]}
           >
-            <InputNumber />
+            <Input />
           </Form.Item>
-          <Form.Item label="Carbs" name="carbs" rules={[{ required: true }]}>
-            <InputNumber />
-          </Form.Item>
-          <Form.Item label="Fats" name="fats" rules={[{ required: true }]}>
-            <InputNumber />
-          </Form.Item>
-          <Form.Item label="Sugars" name="sugars" rules={[{ required: true }]}>
-            <InputNumber />
-          </Form.Item>
-          <Form.Item
-            label="Grams Per Ration"
-            name="gramsPerRation"
-            rules={[{ required: true }]}
-          >
-            <InputNumber />
-          </Form.Item>
+
           <Form.Item>
             <Button type="primary" htmlType="submit">
               Save

@@ -10,16 +10,6 @@ import {
   searchIngredients,
   orderIngredients,
   filterIngredients,
-  addRecipe,
-  orderRecipes,
-  filterRecipes,
-  searchRecipes,
-  countNumberOfTimesAnIngredientIsUsed,
-  getIngredientsInCommon,
-  addFood,
-  getFoodsByDay,
-  getFoodsInRange,
-  calculateNutritionalInfo
   */
 } from "./functions";
 
@@ -41,7 +31,6 @@ export function Ingredients({ data, notifyAdded }) {
   const onSubmit = (values) => {
     const newData = addIngredient(
       JSON.parse(JSON.stringify(data)),
-      values.id,
       values.name,
       values.calories,
       values.proteins,
@@ -73,9 +62,6 @@ export function Ingredients({ data, notifyAdded }) {
         footer=""
       >
         <Form onFinish={onSubmit}>
-          <Form.Item label="ID" name="id" rules={[{ required: true }]}>
-            <InputNumber />
-          </Form.Item>
           <Form.Item label="Name" name="name" rules={[{ required: true }]}>
             <Input placeholder="Input name..." />
           </Form.Item>

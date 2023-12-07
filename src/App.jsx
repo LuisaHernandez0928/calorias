@@ -36,16 +36,29 @@ function App() {
     {
       key: "2",
       label: "Recipes",
-      children: <Recipes notifyAdded={notifyRecipeAdded} data={recipes} />,
+      children: (
+        <Recipes
+          ingredients={ingredients}
+          notifyAdded={notifyRecipeAdded}
+          data={recipes}
+        />
+      ),
     },
     {
       key: "3",
       label: "Foods",
-      children: <Foods notifyAdded={notifyFoodAdded} data={foods} />,
+      children: (
+        <Foods
+          recipes={recipes}
+          ingredients={ingredients}
+          notifyAdded={notifyFoodAdded}
+          data={foods}
+        />
+      ),
     },
   ];
 
-  return <Tabs defaultActiveKey="2" items={items} />;
+  return <Tabs defaultActiveKey="1" items={items} />;
 }
 
 export default App;
