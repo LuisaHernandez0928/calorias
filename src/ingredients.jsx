@@ -7,13 +7,14 @@ import { Button, Modal, Form, InputNumber, Input } from "antd";
 import {
   addIngredient,
   searchIngredients,
+  countNumberOfTimesAnIngredientIsUsed,
   /*
   orderIngredients,
   filterIngredients,
   */
 } from "./functions";
 
-export function Ingredients({ data, notifyAdded }) {
+export function Ingredients({ data, recipes, notifyAdded }) {
   const [modalAdd, setModalAdd] = useState(false);
 
   const [dataSearched, setDataSearched] = useState(data);
@@ -68,9 +69,14 @@ export function Ingredients({ data, notifyAdded }) {
       </div>
 
       <div>
-        {dataSearched.map((ing) => (
-          <div key={ing.id}>{ing.name}</div>
-        ))}
+        {dataSearched.map((ing) => {
+          const times = countNumberOfTimesAnIngredientIsUsed(
+            recipes,
+            data,
+            ing.name
+          );
+          return <div key={ing.id}>{`${ing.name} used ${times} times`}</div>;
+        })}
       </div>
 
       <Modal

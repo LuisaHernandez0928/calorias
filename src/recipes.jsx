@@ -10,7 +10,6 @@ import {
   /*
   orderRecipes,
   filterRecipes,
-  countNumberOfTimesAnIngredientIsUsed,
   getIngredientsInCommon,
   */
 } from "./functions";

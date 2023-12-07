@@ -26,19 +26,18 @@ export const addIngredient = (
   console.log(gramsPerRation);
 
   const newIngredient = {
-    name:name, 
-    calories:calories, 
-    proteins:proteins, 
+    name: name,
+    calories: calories,
+    proteins: proteins,
     carb: carbs,
-    fats:fats,
-    sugars:sugars,
-    gramsPerRation:gramsPerRation
-    };
-    ingredients.push(newIngredient);
+    fats: fats,
+    sugars: sugars,
+    gramsPerRation: gramsPerRation,
+  };
+  ingredients.push(newIngredient);
 
   return ingredients;
 };
-
 
 /*
   Recibe la lista de ingredientes y busca en ella los ingredientes cuyo nombre hagan match
@@ -184,7 +183,7 @@ export const countNumberOfTimesAnIngredientIsUsed = (
   console.log(recipes);
   console.log(ingredients);
   console.log(ingredientName);
-  return null;
+  return 0;
 };
 
 /*
