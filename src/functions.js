@@ -26,6 +26,7 @@ export const addIngredient = (
   console.log(gramsPerRation);
 
   const newIngredient = {
+    id: Date.now(),
     name: name,
     calories: calories,
     proteins: proteins,
@@ -34,8 +35,8 @@ export const addIngredient = (
     sugars: sugars,
     gramsPerRation: gramsPerRation,
   };
-  ingredients.push(newIngredient);
 
+  ingredients.push(newIngredient);
   return ingredients;
 };
 
@@ -48,8 +49,21 @@ export const searchIngredients = (ingredients, name) => {
   console.log("searchIngredients");
   console.log(ingredients);
   console.log(name);
-  return [];
+  const matchesList=[];
+ingredients.map(x=>{
+  console.log('Luisa1'+ x);
+  console.log('Luisa2'+ x.name);
+  console.log('Luisa3'+ name);
+  if(x.name === name){
+    console.log('Luisa4'+ x.name);
+    matchesList.push(x);
+    console.log('esto es de Luisa:' + matchesList);
+  }
+});
+
+  return [matchesList];
 };
+
 
 /*
   Recibe una lista de ingredientes y los ordena según el criterio recibido
