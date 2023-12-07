@@ -24,8 +24,21 @@ export const addIngredient = (
   console.log(fats);
   console.log(sugars);
   console.log(gramsPerRation);
+
+  const newIngredient = {
+    name:name, 
+    calories:calories, 
+    proteins:proteins, 
+    carb: carbs,
+    fats:fats,
+    sugars:sugars,
+    gramsPerRation:gramsPerRation
+    };
+    ingredients.push(newIngredient);
+
   return ingredients;
 };
+
 
 /*
   Recibe la lista de ingredientes y busca en ella los ingredientes cuyo nombre hagan match
