@@ -10,16 +10,18 @@ import {
   searchIngredients,
   countNumberOfTimesAnIngredientIsUsed,
   orderIngredients,
-  /*
   filterIngredients,
-  */
 } from "./functions";
 
 export function Ingredients({ data, recipes, notifyAdded }) {
-  const [modalAdd, setModalAdd] = useState(false);
-
+  /*
+    Data displayed
+  */
   const [dataSearched, setDataSearched] = useState(data);
 
+  /*
+    Ordering
+  */
   const optionsOrder = [
     { label: "Name", value: "name" },
     { label: "Calories", value: "calories" },
@@ -50,13 +52,21 @@ export function Ingredients({ data, recipes, notifyAdded }) {
   }, [order, dataSearched]);
   */
 
+  /* 
+    Searching
+  */
   const onSearch = (val) => {
     let searched = data;
     if (val !== "") {
       searched = searchIngredients(JSON.parse(JSON.stringify(data)), val);
     }
-    setDataSearched(searched);
+    if (searched != data) setDataSearched(searched);
   };
+
+  /*
+    Add
+  */
+  const [modalAdd, setModalAdd] = useState(false);
 
   const addButtonHandler = () => {
     setModalAdd(!modalAdd);
@@ -85,6 +95,9 @@ export function Ingredients({ data, recipes, notifyAdded }) {
     handleOk();
   };
 
+  /*
+    Render
+  */
   return (
     <div>
       <Button onClick={() => addButtonHandler()} type="primary">
@@ -113,12 +126,64 @@ export function Ingredients({ data, recipes, notifyAdded }) {
 
       <div>
         {dataSearched.map((ing) => {
+          console.log("x");
           const times = countNumberOfTimesAnIngredientIsUsed(
             recipes,
             data,
             ing.name
           );
-          return <div key={ing.id}>{`${ing.name} | used ${times} times`}</div>;
+          return (
+            <div
+              key={ing.id}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                borderBottom: "1px solid #ddd",
+                paddingBottom: "16px",
+                paddingTop: "8px",
+              }}
+            >
+              <div>
+                <div style={{ fontSize: "20px" }}>{ing.name}</div>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginTop: "4px",
+                }}
+              >
+                <div>
+                  <span style={{ fontWeight: "bold" }}>Calories:</span>
+                  {` ${ing.calories}`}
+                </div>
+                <div style={{ marginLeft: "16px" }}>{"|"}</div>
+                <div style={{ marginLeft: "16px" }}>
+                  <span style={{ fontWeight: "bold" }}>Proteins:</span>
+                  {` ${ing.proteins}g`}
+                </div>
+                <div style={{ marginLeft: "16px" }}>{"|"}</div>
+                <div style={{ marginLeft: "16px" }}>
+                  <span style={{ fontWeight: "bold" }}>Fats:</span>
+                  {` ${ing.fats}g`}
+                </div>
+                <div style={{ marginLeft: "16px" }}>{"|"}</div>
+                <div style={{ marginLeft: "16px" }}>
+                  <span style={{ fontWeight: "bold" }}>Sugars:</span>
+                  {` ${ing.sugars}g`}
+                </div>
+                <div style={{ marginLeft: "16px" }}>{"|"}</div>
+                <div style={{ marginLeft: "16px" }}>
+                  <span style={{ fontWeight: "bold" }}>Calories</span>
+                  {` ${ing.carbs}g`}
+                </div>
+                <div style={{ marginLeft: "16px" }}>{"|"}</div>
+                <div
+                  style={{ marginLeft: "16px" }}
+                >{`Used in ${times} recipes.`}</div>
+              </div>
+            </div>
+          );
         })}
       </div>
 
