@@ -31,19 +31,44 @@ export const addIngredient = (
   return ingredients;
 };
 
+function search(a, b) {
+  const porEncontrar = b;
+  const espacioBusqueda = a;
+
+  let i = 0;
+  let j = 0;
+
+  let match = false;
+
+  const espacioBusquedaL = espacioBusqueda.length;
+  const porEncontrarL = porEncontrar.length;
+
+  while (!(i >= espacioBusquedaL || j >= porEncontrarL)) {
+    if (espacioBusqueda[i] === porEncontrar[j]) {
+      j++;
+      i++;
+      if (j === porEncontrarL) match = true;
+    } else {
+      if (j === 0) i++;
+      j = 0;
+    }
+  }
+  return match;
+}
+
 /*
   Recibe la lista de ingredientes y busca en ella los ingredientes cuyo nombre hagan match
   con el nombre recibido en parámetro. Retorna una lista de ingredientes. Si no hay ninguno
   que haga match retorna una lista vacía.
 */
 export const searchIngredients = (ingredients, name) => {
-  const matchesList = [];
-  ingredients.map((x) => {
-    if (x.name === name) {
-      matchesList.push(x);
+  const results = [];
+  for (let i = 0; i < ingredients.length; i++) {
+    if (search(ingredients[i].name, name)) {
+      results.push(ingredients[i]);
     }
-  });
-  return matchesList;
+  }
+  return results;
 };
 
 /*
