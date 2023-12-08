@@ -71,13 +71,41 @@ export const searchIngredients = (ingredients, name) => {
   return results;
 };
 
+
+function findMin(arr, criteria) {
+  let currentMin = arr[0];
+  let position =  0;
+  for(let i = 1; i < arr.length; i++) {
+      if(arr[i][criteria] < currentMin[criteria]){
+          currentMin = arr[i];
+          position = i;
+      }
+  }
+  return [currentMin, position];
+}
+
+function deleteAtPosition(arr, pos) {
+  const newArray = [];
+  for(let i = 0; i < arr.length; i++) {
+      if(i != pos) newArray.push(arr[i]);
+  }
+  return newArray;
+}
+
 /*
   Recibe una lista de ingredientes y los ordena según el criterio recibido
   criteria es un string que puede tener los valores: 'name', 'calories', 'proteins'
   Retorna la lista de ingredientes ordenada por el criterio
 */
-export const orderIngredients = (ingredients, criteria) => {
-  return ingredients;
+export const orderIngredients = (arr, criteria) => {
+  const sortedArray = [];
+  let copyArray = JSON.parse(JSON.stringify(arr));
+  for(let i = 0; i < arr.length; i++) {
+      const [min, pos] = findMin(copyArray, criteria);
+      sortedArray.push(min);
+      copyArray = deleteAtPosition(copyArray, pos);
+  }
+  return sortedArray;
 };
 
 /*
