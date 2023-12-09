@@ -186,6 +186,42 @@ export const addRecipe = (recipes, name, ingredientIds, ingredientsAmount) => {
   return recipes;
 };
 
+const getIngredientsId = (recipes, recipeName)=> {
+  let ingredientsId = [];
+  for(let i = 0; i < recipes.length; i++) {
+      if(recipes[i].name == recipeName){
+          ingredientsId = recipes[i].ingredients;
+      }
+  }
+return ingredientsId;
+};
+
+const getIngredientsAmount = (recipes, recipeName)=> {
+  let ingredientsAmount = [];
+  for(let i = 0; i < recipes.length; i++) {
+      
+      if(recipes[i].name == recipeName){
+          ingredientsAmount = recipes[i].ingredientsAmount;
+      }
+  }
+return ingredientsAmount;
+};
+
+const getIngredientInfobyId = (arrId, ingredients) => {
+  let i = 0;
+  let j = 0;
+  let ingredientsInfo = [];
+while(j < ingredients.length) {
+    if(ingredients[j].id == arrId[i]) {
+        ingredientsInfo.push(ingredients[j]);
+        i ++;
+        j = 0;
+        if(i == arrId.length) j=ingredients.length;
+    } else j++ ;
+}
+return ingredientsInfo;
+};
+
 /*
   Retorna un objeto con dos propiedades: ingredients y amounts, cada uno es un array
   Por ejemplo:
@@ -204,7 +240,15 @@ export const addRecipe = (recipes, name, ingredientIds, ingredientsAmount) => {
   del primero se usa 1 porción, del segundo se usan 3 porciones
 */
 export const getIngredientsFromRecipe = (recipes, recipeName, ingredients) => {
-  return null;
+
+  const results = {
+    ingredients: getIngredientInfobyId(getIngredientsId(recipes,recipeName),
+    ingredients),
+    
+    amounts: getIngredientsAmount(recipes,recipeName),
+};
+
+return results;
 };
 
 /*
