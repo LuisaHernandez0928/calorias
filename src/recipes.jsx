@@ -83,22 +83,12 @@ export function Recipes({ data, ingredients, notifyAdded }) {
   const changeOrder = (mOrder) => {
     setOrder(mOrder);
     const mOrdered = orderRecipes(
-      JSON.parse(JSON.stringify(dataSearched)),
+      JSON.parse(JSON.stringify(dataFiltered)),
       JSON.parse(JSON.stringify(ingredients)),
       mOrder
     );
     setDataSearched(mOrdered);
-    let dataFiltered = mOrdered;
-    if (filterStart != "" && filterEnd != "") {
-      dataFiltered = filterRecipes(
-        dataFiltered,
-        JSON.parse(JSON.stringify(ingredients)),
-        filter,
-        filterStart,
-        filterEnd
-      );
-    }
-    setDataFiltered(dataFiltered);
+    setDataFiltered(mOrdered);
   };
 
   /*
@@ -115,6 +105,7 @@ export function Recipes({ data, ingredients, notifyAdded }) {
         parseInt(filterEnd)
       );
       setDataSearched(mFiltered);
+      setDataFiltered(mFiltered);
     }
   };
 
@@ -217,8 +208,15 @@ export function Recipes({ data, ingredients, notifyAdded }) {
   */
   return (
     <div>
-      <div style={{ display: "flex", marginTop: "16px", marginBottom: "16px" }}>
-        <Form form={form}>
+      <div
+        style={{
+          display: "flex",
+          marginTop: "16px",
+          marginBottom: "16px",
+          width: "100%",
+        }}
+      >
+        <Form form={form} style={{ flex: "1 1 50%" }}>
           <Form.Item name="searchField">
             <Input.Search
               placeholder="Search recipes"

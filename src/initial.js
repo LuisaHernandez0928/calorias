@@ -49,12 +49,12 @@ export const initialIRecipes = [
 export const initialFoods = [
   {
     id: 1,
-    day: "07/12/2023",
+    day: "12/7/2023",
     recipe: "Rice with eggs",
   },
   {
     id: 2,
-    day: "07/12/2023",
+    day: "12/7/2023",
     recipe: "Rice with chicken",
   },
 ];

@@ -30,7 +30,7 @@ export function Foods({ data, ingredients, recipes, notifyAdded }) {
   useEffect(() => {
     const mNut = calculateNutritionalInfo(dataSearched, recipes, ingredients);
     setNutritionalInfo(mNut);
-  }, [dataSearched, ingredients, recipes]);
+  }, [data, dataSearched, ingredients, recipes]);
 
   const onSearchStart = (val) => {
     if (!val) {
@@ -42,7 +42,7 @@ export function Foods({ data, ingredients, recipes, notifyAdded }) {
         setDataSearched(foods);
       }
     } else {
-      const date = val.$D + "/" + (val.$M + 1) + "/" + val.$y;
+      const date = val.$M + 1 + "/" + val.$D + "/" + val.$y;
       if (dateEnd != "") {
         const foods = getFoodsInRange(
           JSON.parse(JSON.stringify(data)),
@@ -71,7 +71,7 @@ export function Foods({ data, ingredients, recipes, notifyAdded }) {
         setDataSearched(foods);
       }
     } else {
-      const date = val.$D + "/" + (val.$M + 1) + "/" + val.$y;
+      const date = val.$M + 1 + "/" + val.$D + "/" + val.$y;
       if (dateStart != "") {
         const foods = getFoodsInRange(
           JSON.parse(JSON.stringify(data)),
@@ -189,48 +189,51 @@ export function Foods({ data, ingredients, recipes, notifyAdded }) {
       </div>
 
       <div style={{ borderTop: "1px solid #ddd" }}>
-        {dataSearched.map((ing, i) => (
-          <div
-            key={ing.id}
-            style={{
-              display: "flex",
-              borderBottom: "1px solid #ddd",
-              paddingTop: "8px",
-              paddingBottom: "8px",
-              justifyContent: "space-between",
-              backgroundColor: i % 2 == 0 ? "white" : "#eee",
-              paddingLeft: "16px",
-              paddingRight: "16px",
-            }}
-          >
-            <div style={{ display: "flex" }}>
-              <span style={{ fontWeight: "bold" }}>{`${ing.day}: `}</span>
-              <div style={{ marginLeft: "8px" }}>{`${ing.recipe}`}</div>
+        {dataSearched.map((food, i) => {
+          const mNutri = calculateNutritionalInfo([food], recipes, ingredients);
+          return (
+            <div
+              key={food.id}
+              style={{
+                display: "flex",
+                borderBottom: "1px solid #ddd",
+                paddingTop: "8px",
+                paddingBottom: "8px",
+                justifyContent: "space-between",
+                backgroundColor: i % 2 == 0 ? "white" : "#eee",
+                paddingLeft: "16px",
+                paddingRight: "16px",
+              }}
+            >
+              <div style={{ display: "flex" }}>
+                <span style={{ fontWeight: "bold" }}>{`${food.day}: `}</span>
+                <div style={{ marginLeft: "8px" }}>{`${food.recipe}`}</div>
+              </div>
+              <div style={{ display: "flex" }}>
+                <div style={{ marginLeft: "16px" }}>
+                  <span style={{ fontWeight: "bold" }}>{`Calories: `}</span>
+                  {`${mNutri.calories}`}
+                </div>
+                <div style={{ marginLeft: "16px" }}>
+                  <span style={{ fontWeight: "bold" }}>{`Carbs: `}</span>
+                  {`${mNutri.carbs}`}
+                </div>
+                <div style={{ marginLeft: "16px" }}>
+                  <span style={{ fontWeight: "bold" }}>{`Sugars: `}</span>
+                  {`${mNutri.sugars}`}
+                </div>
+                <div style={{ marginLeft: "16px" }}>
+                  <span style={{ fontWeight: "bold" }}>{`Fats: `}</span>
+                  {`${mNutri.fats}`}
+                </div>
+                <div style={{ marginLeft: "16px" }}>
+                  <span style={{ fontWeight: "bold" }}>{`Proteins: `}</span>
+                  {`${mNutri.proteins}`}
+                </div>
+              </div>
             </div>
-            <div style={{ display: "flex" }}>
-              <div style={{ marginLeft: "16px" }}>
-                <span style={{ fontWeight: "bold" }}>{`Calories: `}</span>
-                {`${nutritionalInfo.calories}`}
-              </div>
-              <div style={{ marginLeft: "16px" }}>
-                <span style={{ fontWeight: "bold" }}>{`Carbs: `}</span>
-                {`${nutritionalInfo.carbs}`}
-              </div>
-              <div style={{ marginLeft: "16px" }}>
-                <span style={{ fontWeight: "bold" }}>{`Sugars: `}</span>
-                {`${nutritionalInfo.sugars}`}
-              </div>
-              <div style={{ marginLeft: "16px" }}>
-                <span style={{ fontWeight: "bold" }}>{`Fats: `}</span>
-                {`${nutritionalInfo.fats}`}
-              </div>
-              <div style={{ marginLeft: "16px" }}>
-                <span style={{ fontWeight: "bold" }}>{`Proteins: `}</span>
-                {`${nutritionalInfo.proteins}`}
-              </div>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <Modal
