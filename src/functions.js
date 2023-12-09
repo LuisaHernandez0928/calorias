@@ -71,23 +71,22 @@ export const searchIngredients = (ingredients, name) => {
   return results;
 };
 
-
 function findMin(arr, criteria) {
   let currentMin = arr[0];
-  let position =  0;
-  for(let i = 1; i < arr.length; i++) {
-      if(arr[i][criteria] < currentMin[criteria]){
-          currentMin = arr[i];
-          position = i;
-      }
+  let position = 0;
+  for (let i = 1; i < arr.length; i++) {
+    if (arr[i][criteria] < currentMin[criteria]) {
+      currentMin = arr[i];
+      position = i;
+    }
   }
   return [currentMin, position];
 }
 
 function deleteAtPosition(arr, pos) {
   const newArray = [];
-  for(let i = 0; i < arr.length; i++) {
-      if(i != pos) newArray.push(arr[i]);
+  for (let i = 0; i < arr.length; i++) {
+    if (i != pos) newArray.push(arr[i]);
   }
   return newArray;
 }
@@ -100,13 +99,28 @@ function deleteAtPosition(arr, pos) {
 export const orderIngredients = (arr, criteria) => {
   const sortedArray = [];
   let copyArray = JSON.parse(JSON.stringify(arr));
-  for(let i = 0; i < arr.length; i++) {
-      const [min, pos] = findMin(copyArray, criteria);
-      sortedArray.push(min);
-      copyArray = deleteAtPosition(copyArray, pos);
+  for (let i = 0; i < arr.length; i++) {
+    const [min, pos] = findMin(copyArray, criteria);
+    sortedArray.push(min);
+    copyArray = deleteAtPosition(copyArray, pos);
   }
   return sortedArray;
 };
+
+function findRange(arr, criteria, min, max) {
+  let currentMatch = {};
+  let position = -1;
+  let wasInsideLoop = false;
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i][criteria] <= max && arr[i][criteria] >= min) {
+      wasInsideLoop = true;
+      currentMatch = arr[i];
+      position = i;
+    }
+  }
+  if (wasInsideLoop) return [currentMatch, position];
+  return [null, position];
+}
 
 /*
   Recibe una lista de ingredientes y los filtra según el criterio recibido
@@ -120,12 +134,32 @@ export const orderIngredients = (arr, criteria) => {
   Debería retornar la lista de ingredientes con entre 30 y 50 calorias
 */
 export const filterIngredients = (ingredients, criteria, value1, value2) => {
-  return [];
+  const sortedArray = [];
+  for (let i = 0; i < ingredients.length; i++) {
+    const val = ingredients[i][criteria];
+    if (val >= value1 && val <= value2) sortedArray.push(ingredients[i]);
+  }
+  return sortedArray;
 };
+/*
+export const filterIngredients = (ingredients, criteria, value1, value2) => {
+  const sortedArray = [];
+  let copyArray = JSON.parse(JSON.stringify(ingredients));
+  for (let i = 0; i < ingredients.length; i++) {
+    const [min, pos] = findRange(copyArray, criteria, value1, value2);
+    if (min != null) {
+      sortedArray.push(min);
+      copyArray = deleteAtPosition(copyArray, pos);
+    }
+  }
+  console.log(sortedArray);
+  return sortedArray;
+};
+*/
 
 /**
   Añade una receta a la lista de recetas.
-  Recibe la lista de recetas, la lista de ingredientes que tiene la nueva receta.
+  Recibe la lista de recetas, la lista de ids de ingredientes que tiene la nueva receta.
   La cantidad de veces que tiene cada ingrediente, y el nombre de la receta.
   Retorna la lista de recetas con la nueva receta añadida.
   Cada receta tiene un id, un nombre, una lista de ingredientes, y una lista que 
@@ -138,7 +172,17 @@ export const filterIngredients = (ingredients, criteria, value1, value2) => {
     Esto significaría que la receta usa 2 porciones del ingrediente con id 20,
     y 1 porción del ingrediente con id 30.
  */
-export const addRecipe = (recipes, name, ingredients, ingredientsAmount) => {
+export const addRecipe = (recipes, name, ingredientIds, ingredientsAmount) => {
+  const newRecipe = {
+    id: Date.now(),
+    name: name,
+    ingredients: ingredientIds,
+    ingredientsAmount: ingredientsAmount,
+  };
+  console.log(newRecipe);
+  recipes.push(newRecipe);
+  console.log(recipes.length);
+  console.log(recipes);
   return recipes;
 };
 

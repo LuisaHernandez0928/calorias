@@ -35,13 +35,13 @@ export const initialIRecipes = [
   {
     id: 1,
     name: "Rice with chicken",
-    ingredients: ["rice", "chicken breast"],
+    ingredients: [3, 2],
     ingredientsAmount: [1, 1],
   },
   {
     id: 2,
     name: "Rice with eggs",
-    ingredients: ["rice", "egg"],
+    ingredients: [3, 1],
     ingredientsAmount: [1, 2],
   },
 ];
