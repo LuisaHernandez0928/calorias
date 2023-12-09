@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { Button, Modal, Form, Input, Select, Radio, InputNumber } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
@@ -33,6 +33,8 @@ const getInitialData = (data, ingredients, order) => {
 };
 
 export function Recipes({ data, ingredients, notifyAdded }) {
+  const [form] = Form.useForm();
+
   const optionsIng = ingredients.map((ing) => ({
     label: ing.name,
     value: ing.id,
@@ -54,8 +56,14 @@ export function Recipes({ data, ingredients, notifyAdded }) {
     State Data searched
   */
   const [dataSearched, setDataSearched] = useState(
-    getInitialData(data, ingredients, order)
+    JSON.parse(JSON.stringify(data))
   );
+
+  useEffect(() => {
+    setDataSearched(getInitialData(data, ingredients, order));
+    setDataFiltered(getInitialData(data, ingredients, order));
+    form.resetFields(["searchField"]);
+  }, [data]);
 
   /*
     State Data filtered
@@ -210,11 +218,16 @@ export function Recipes({ data, ingredients, notifyAdded }) {
   return (
     <div>
       <div style={{ display: "flex", marginTop: "16px", marginBottom: "16px" }}>
-        <Input.Search
-          placeholder="Search recipes"
-          allowClear
-          onSearch={onSearch}
-        />
+        <Form form={form}>
+          <Form.Item name="searchField">
+            <Input.Search
+              placeholder="Search recipes"
+              allowClear
+              onSearch={onSearch}
+            />
+          </Form.Item>
+        </Form>
+
         <div style={{ marginLeft: "16px" }}>
           <Button
             icon={<PlusOutlined />}
