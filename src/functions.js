@@ -186,40 +186,39 @@ export const addRecipe = (recipes, name, ingredientIds, ingredientsAmount) => {
   return recipes;
 };
 
-const getIngredientsId = (recipes, recipeName)=> {
+const getIngredientsId = (recipes, recipeName) => {
   let ingredientsId = [];
-  for(let i = 0; i < recipes.length; i++) {
-      if(recipes[i].name == recipeName){
-          ingredientsId = recipes[i].ingredients;
-      }
+  for (let i = 0; i < recipes.length; i++) {
+    if (recipes[i].name == recipeName) {
+      ingredientsId = recipes[i].ingredients;
+    }
   }
-return ingredientsId;
+  return ingredientsId;
 };
 
-const getIngredientsAmount = (recipes, recipeName)=> {
+const getIngredientsAmount = (recipes, recipeName) => {
   let ingredientsAmount = [];
-  for(let i = 0; i < recipes.length; i++) {
-      
-      if(recipes[i].name == recipeName){
-          ingredientsAmount = recipes[i].ingredientsAmount;
-      }
+  for (let i = 0; i < recipes.length; i++) {
+    if (recipes[i].name == recipeName) {
+      ingredientsAmount = recipes[i].ingredientsAmount;
+    }
   }
-return ingredientsAmount;
+  return ingredientsAmount;
 };
 
 const getIngredientInfobyId = (arrId, ingredients) => {
   let i = 0;
   let j = 0;
   let ingredientsInfo = [];
-while(j < ingredients.length) {
-    if(ingredients[j].id == arrId[i]) {
-        ingredientsInfo.push(ingredients[j]);
-        i ++;
-        j = 0;
-        if(i == arrId.length) j=ingredients.length;
-    } else j++ ;
-}
-return ingredientsInfo;
+  while (j < ingredients.length) {
+    if (ingredients[j].id == arrId[i]) {
+      ingredientsInfo.push(ingredients[j]);
+      i++;
+      j = 0;
+      if (i == arrId.length) j = ingredients.length;
+    } else j++;
+  }
+  return ingredientsInfo;
 };
 
 /*
@@ -240,30 +239,79 @@ return ingredientsInfo;
   del primero se usa 1 porción, del segundo se usan 3 porciones
 */
 export const getIngredientsFromRecipe = (recipes, recipeName, ingredients) => {
-
   const results = {
-    ingredients: getIngredientInfobyId(getIngredientsId(recipes,recipeName),
-    ingredients),
-    
-    amounts: getIngredientsAmount(recipes,recipeName),
+    ingredients: getIngredientInfobyId(
+      getIngredientsId(recipes, recipeName),
+      ingredients
+    ),
+
+    amounts: getIngredientsAmount(recipes, recipeName),
+  };
+
+  return results;
 };
 
-return results;
-};
+function getCaloriesOfIngredientOfRecipe(recipe, ingId, ings) {
+  let ing;
+  for (let i = 0; i < ings.length; i++) {
+    if (ings[i].id === ingId) ing = ings[i];
+  }
+  let position;
+  for (let i = 0; i < recipe.ingredients.length; i++) {
+    if (recipe.ingredients[i] == ingId) position = i;
+  }
 
+  let amount = recipe.ingredientsAmount[position];
+  return ing.calories * amount;
+}
+
+function findCaloriesOfRecipe(recipe, ings) {
+  // dada una receta, encuentra el total de calorias
+  let calories = 0;
+  let ingRp = recipe.ingredients;
+  for (let i = 0; i < recipe.ingredients.length; i++) {
+    calories += getCaloriesOfIngredientOfRecipe(recipe, ingRp[i], ings);
+  }
+  return calories;
+}
+
+function findMinRecipes(initialRecipes, initialIngredients) {
+  let position = 0;
+  let minCaloriesRecipe = initialRecipes[position];
+  let currentMin = findCaloriesOfRecipe(minCaloriesRecipe, initialIngredients);
+  for (let i = 1; i < initialRecipes.length; i++) {
+    const calories = findCaloriesOfRecipe(
+      initialRecipes[i],
+      initialIngredients
+    );
+    if (calories < currentMin) {
+      currentMin = calories;
+      minCaloriesRecipe = initialIngredients[i];
+      position = i;
+    }
+  }
+  return [minCaloriesRecipe, position];
+}
 /*
   Recibe una lista de recetas y las ordena según el criterio recibido
   criteria puede tener los valores: 'name', 'numingredients', 'calories', 'proteins'
-  Retorna la lista de ingredientes ordenada por el criterio
+  Retorna la lista de recetas ordenada por el criterio
 */
 export const orderRecipes = (recipes, ingredients, criteria) => {
-  return recipes;
+  const sortedRecipes = [];
+  let copyArray = JSON.parse(JSON.stringify(recipes));
+  for (let i = 0; i < recipes.length; i++) {
+    const [min, pos] = findMinRecipes(copyArray, ingredients);
+    sortedRecipes.push(min);
+    copyArray = deleteAtPosition(copyArray, pos);
+  }
+  return sortedRecipes;
 };
 
 /*
   Recibe una lista de recetas y las filtra según el criterio recibido
   criteria puede tener los valores: 'calories', 'proteins'
-  Retorna la lista de ingredientes ordenada por el criterio
+  Retorna la lista de recetas ordenada por el criterio
 */
 export const filterRecipes = (
   recipes,
