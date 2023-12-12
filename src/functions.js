@@ -327,15 +327,17 @@ const findCriteriaByIngredint = (recipe, idIngr, listIngr, criteria) => {
 
 const findCriteriaByRecipe = (recipe, ingr, criteria) => {
   let criteriaAggregated = 0;
-  for (let i = 0; i < recipe.ingredients.length; i++) {
-    criteriaAggregated += findCriteriaByIngredint(
-      recipe,
-      recipe.ingredients[i],
-      ingr,
-      criteria
-    );
+  if (recipe) {
+    for (let i = 0; i < recipe.ingredients.length; i++) {
+      criteriaAggregated += findCriteriaByIngredint(
+        recipe,
+        recipe.ingredients[i],
+        ingr,
+        criteria
+      );
+    }
+    return criteriaAggregated;
   }
-  return criteriaAggregated;
 };
 
 /*
@@ -408,7 +410,7 @@ export const countNumberOfTimesAnIngredientIsUsed = (
 export const addFood = (foods, day, recipe) => {
   const newFood = {
     id: Date.now(),
-    date: day,
+    day: day,
     recipe: recipe,
   };
 
@@ -434,8 +436,11 @@ export const getFoodsByDay = (foods, day) => {
 */
 export const getFoodsInRange = (foods, day1, day2) => {
   let foodsInRange = [];
+  let date1 = new Date(day1).getTime();
+  let date2 = new Date(day2).getTime();
   foods.forEach((food) => {
-    if (food.date >= day1 && food.date <= day2) {
+    let dateFood = new Date(food.day).getTime();
+    if (dateFood > date1 && dateFood < date2) {
       foodsInRange.push(food);
     }
   });
@@ -461,7 +466,7 @@ const findRecipeByName = (name, recipes) => {
   });
   return recipe;
 };
-export const calculateNutritionalInfo = (foods, recipes, ingredients) => {
+export const calculateNutritionalInfoByFood = (foods, recipes, ingredients) => {
   const nutritionalInfo = {
     carbs: findCriteriaByRecipe(
       findRecipeByName(foods.recipe, recipes),
@@ -490,4 +495,50 @@ export const calculateNutritionalInfo = (foods, recipes, ingredients) => {
     ),
   };
   return nutritionalInfo;
+};
+
+export const calculateNutritionalInfo = (foods, recipes, ingredients) => {
+  let carbsAll = 0;
+  let caloriesAll = 0;
+  let sugarAll = 0;
+  let proteinsAll = 0;
+  let fatsAll = 0;
+
+  foods.forEach((food) => {
+    carbsAll += findCriteriaByRecipe(
+      findRecipeByName(food.recipe, recipes),
+      ingredients,
+      "carbs"
+    );
+    caloriesAll += findCriteriaByRecipe(
+      findRecipeByName(food.recipe, recipes),
+      ingredients,
+      "calories"
+    );
+    proteinsAll += findCriteriaByRecipe(
+      findRecipeByName(food.recipe, recipes),
+      ingredients,
+      "proteins"
+    );
+    sugarAll += findCriteriaByRecipe(
+      findRecipeByName(food.recipe, recipes),
+      ingredients,
+      "sugars"
+    );
+    fatsAll += findCriteriaByRecipe(
+      findRecipeByName(food.recipe, recipes),
+      ingredients,
+      "fats"
+    );
+  });
+
+  const nutritionInfo = {
+    sugars: sugarAll,
+    carbs: carbsAll,
+    fats: fatsAll,
+    calories: caloriesAll,
+    proteins: proteinsAll,
+  };
+
+  return nutritionInfo;
 };
