@@ -107,7 +107,7 @@ export const orderIngredients = (arr, criteria) => {
   return sortedArray;
 };
 
-function findRange(arr, criteria, min, max) {
+/*function findRange(arr, criteria, min, max) {
   let currentMatch = {};
   let position = -1;
   let wasInsideLoop = false;
@@ -120,7 +120,7 @@ function findRange(arr, criteria, min, max) {
   }
   if (wasInsideLoop) return [currentMatch, position];
   return [null, position];
-}
+}*/
 
 /*
   Recibe una lista de ingredientes y los filtra según el criterio recibido
@@ -298,6 +298,7 @@ function findMinRecipes(initialRecipes, initialIngredients) {
   Retorna la lista de recetas ordenada por el criterio
 */
 export const orderRecipes = (recipes, ingredients, criteria) => {
+  //Queda  pendiente ordenar por nombre y numero de ingredientes
   const sortedRecipes = [];
   let copyArray = JSON.parse(JSON.stringify(recipes));
   for (let i = 0; i < recipes.length; i++) {
@@ -308,18 +309,54 @@ export const orderRecipes = (recipes, ingredients, criteria) => {
   return sortedRecipes;
 };
 
+const findCriteriaByIngredint = (recipe, idIngr, listIngr, criteria) => {
+  let ingrMatched;
+  //Encontrar los datos del ingredeinte que hacen match con el Id
+  for (let i = 0; i < listIngr.length; i++) {
+    if (listIngr[i].id == idIngr) ingrMatched = listIngr[i];
+  }
+  let position;
+  //Encontrar la cantidad de 1 ingrediente en la receta
+  for (let i = 0; i < recipe.ingredients.length; i++) {
+    if (recipe.ingredients[i] == idIngr) position = i;
+  }
+  let criteriaByIngr =
+    ingrMatched[criteria] * recipe.ingredientsAmount[position];
+  return criteriaByIngr;
+};
+
+const findCriteriaByRecipe = (recipe, ingr, criteria) => {
+  let criteriaAggregated = 0;
+  for (let i = 0; i < recipe.ingredients.length; i++) {
+    criteriaAggregated += findCriteriaByIngredint(
+      recipe,
+      recipe.ingredients[i],
+      ingr,
+      criteria
+    );
+  }
+  return criteriaAggregated;
+};
+
 /*
   Recibe una lista de recetas y las filtra según el criterio recibido
   criteria puede tener los valores: 'calories', 'proteins'
-  Retorna la lista de recetas ordenada por el criterio
+  Retorna la lista de recetas filtradas por el criterio
 */
 export const filterRecipes = (
-  recipes,
+  recipeList,
   ingredients,
   criteria,
   value1,
   value2
 ) => {
+  let recipes = [];
+  for (let i = 0; i < recipeList.length; i++) {
+    const current = findCriteriaByRecipe(recipeList[i], ingredients, criteria);
+    if (current >= value1 && current <= value2) {
+      recipes.push(recipeList[i]);
+    }
+  }
   return recipes;
 };
 
@@ -329,19 +366,39 @@ export const filterRecipes = (
   que haga match retorna una lista vacía.
 */
 export const searchRecipes = (recipes, name) => {
-  return recipes;
+  const results = [];
+  for (let i = 0; i < recipes.length; i++) {
+    if (search(recipes[i].name, name)) {
+      results.push(recipes[i]);
+    }
+  }
+  return results;
 };
 
 /*
   Recibe la lista de recetas y busca la cantidad recetas que usan un ingrediente especificado
   Retorna el número de veces que el ingrediente se usa en todas las recetas
 */
+const findIdByName = (ingredients, name) => {
+  let id;
+  ingredients.forEach((elem) => (elem.name == name ? (id = elem.id) : id));
+  return id;
+};
+
 export const countNumberOfTimesAnIngredientIsUsed = (
   recipes,
   ingredients,
   ingredientName
 ) => {
-  return 0;
+  let count = 0;
+  recipes.forEach((elem) => {
+    elem.ingredients.forEach((x) => {
+      if (x == findIdByName(ingredients, ingredientName)) {
+        count++;
+      }
+    });
+  });
+  return count;
 };
 
 /*
@@ -349,6 +406,13 @@ export const countNumberOfTimesAnIngredientIsUsed = (
   Una comida cuenta con un id, una fecha, y una receta.
 */
 export const addFood = (foods, day, recipe) => {
+  const newFood = {
+    id: Date.now(),
+    date: day,
+    recipe: recipe,
+  };
+
+  foods.push(newFood);
   return foods;
 };
 
@@ -356,14 +420,26 @@ export const addFood = (foods, day, recipe) => {
   Obtiene todas las comidas registradas en un día específico.
 */
 export const getFoodsByDay = (foods, day) => {
-  return [];
+  let foodsByDay = [];
+  foods.forEach((food) => {
+    if (food.date == day) {
+      foodsByDay.push(food);
+    }
+  });
+  return foodsByDay;
 };
 
 /*
   Obtiene todas las comidas registradas en un rango de días.
 */
 export const getFoodsInRange = (foods, day1, day2) => {
-  return [];
+  let foodsInRange = [];
+  foods.forEach((food) => {
+    if (food.date >= day1 && food.date <= day2) {
+      foodsInRange.push(food);
+    }
+  });
+  return foodsInRange;
 };
 
 /*
@@ -378,12 +454,40 @@ export const getFoodsInRange = (foods, day1, day2) => {
     proteins: 40
   }
 */
+const findRecipeByName = (name, recipes) => {
+  let recipe = {};
+  recipes.forEach((elem) => {
+    if (elem.name === name) recipe = elem;
+  });
+  return recipe;
+};
 export const calculateNutritionalInfo = (foods, recipes, ingredients) => {
-  return {
-    carbs: 0,
-    calories: 0,
-    sugars: 0,
-    proteins: 0,
-    fats: 0,
+  const nutritionalInfo = {
+    carbs: findCriteriaByRecipe(
+      findRecipeByName(foods.recipe, recipes),
+      ingredients,
+      "carbs"
+    ),
+    calories: findCriteriaByRecipe(
+      findRecipeByName(foods.recipe, recipes),
+      ingredients,
+      "calories"
+    ),
+    sugars: findCriteriaByRecipe(
+      findRecipeByName(foods.recipe, recipes),
+      ingredients,
+      "sugars"
+    ),
+    proteins: findCriteriaByRecipe(
+      findRecipeByName(foods.recipe, recipes),
+      ingredients,
+      "proteins"
+    ),
+    fats: findCriteriaByRecipe(
+      findRecipeByName(foods.recipe, recipes),
+      ingredients,
+      "fats"
+    ),
   };
+  return nutritionalInfo;
 };
